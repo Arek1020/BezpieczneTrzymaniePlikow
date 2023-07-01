@@ -7,8 +7,8 @@
 
   <h1>Przesyłanie pliku</h1>
   <input type="file" id="fileInput">
-  <!-- <input type="text" id="key" placeholder="Enter key"> -->
   <button onclick="uploadFile()">Wyślij plik</button>
+  <p id="uploadStatus"></p>
 
   <hr>
 
@@ -17,7 +17,7 @@
   <button onclick="downloadFile()">Pobierz plik</button>
 
   <script>
-    function uploadFile() {
+     function uploadFile() {
       var fileInput = document.getElementById('fileInput');
       var file = fileInput.files[0];
 
@@ -26,18 +26,18 @@
 
       var xhr = new XMLHttpRequest();
       xhr.open('POST', 'http://127.0.0.1:5000/upload', true); // Zastąp 'adres_serwera' odpowiednim adresem API
-
       xhr.onload = function () {
         if (xhr.status === 200) {
           console.log('Plik został przesłany.');
+          document.getElementById('uploadStatus').textContent = xhr.responseText; // Aktualizacja komunikatu
         } else {
           console.error('Wystąpił błąd podczas przesyłania pliku.');
+          document.getElementById('uploadStatus').textContent = 'Wystąpił błąd podczas przesyłania pliku.'; // Aktualizacja komunikatu
         }
       };
 
       xhr.send(formData);
     }
-
     function downloadFile() {
       var fileCodeInput = document.getElementById('fileCode');
       var fileCode = fileCodeInput.value;
@@ -47,13 +47,11 @@
       xhr.responseType = 'blob';
       xhr.onload = function () {
         if (xhr.status === 200) {
-          var response = xhr.response
-          var Filename = response.attachment_filename;
           var downloadLink = document.createElement('a');
           var blob = xhr.response;
           var url = window.URL.createObjectURL(blob);
           downloadLink.href = url;
-          downloadLink.download = 'downloaded_file';
+          downloadLink.download = 'downloaded_file.txt';
           downloadLink.click();
           window.URL.revokeObjectURL(url);
           console.log('Plik został pobrany.');
