@@ -7,7 +7,7 @@
 
   <h1>Przesyłanie pliku</h1>
   <input type="file" id="fileInput">
-  <input type="text" id="key" placeholder="Enter key">
+  <!-- <input type="text" id="key" placeholder="Enter key"> -->
   <button onclick="uploadFile()">Wyślij plik</button>
 
   <hr>
@@ -45,7 +45,6 @@
       var xhr = new XMLHttpRequest();
       xhr.open('GET', 'http://127.0.0.1:5000/download/' + fileCode, true); // Zastąp 'adres_serwera' odpowiednim adresem API
       xhr.responseType = 'blob';
-      xhr.
       xhr.onload = function () {
         if (xhr.status === 200) {
           var response = xhr.response

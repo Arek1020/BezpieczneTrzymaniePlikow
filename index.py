@@ -3,19 +3,22 @@ from cryptography.fernet import Fernet
 import os
 import uuid
 import json
-
+from flask import send_from_directory
 
 app = Flask(__name__)
 encrypted_folder = "encrypted_files/"
 decrypted_folder = "decrypted_files/"
+filename_path = "./filename.json"
 key_path = "./key.txt"
 
 def write_filename_to_json(encrypted_filename, filename):
     new_data = {
         encrypted_filename : filename
     }
-    with open('filename.json', 'r') as file:
-         data = json.load(file)
+    data = {}
+    if os.path.exists(filename_path):
+        with open('filename.json', 'r') as file:
+            data = json.load(file)
     data.update(new_data)
     with open("filename.json", "w") as write_file:
          json.dump(data, write_file)
@@ -63,6 +66,10 @@ def decrypt_file(file_code):
         with open(os.path.join(decrypted_folder, decrypted_filename), 'wb') as decrypted_file:
             decrypted_file.write(decrypted_data)
         return decrypted_filename
+
+@app.route('/')
+def send_report():
+    return send_from_directory('./public', 'index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
