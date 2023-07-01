@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Przesyłanie pliku</title>
+  <title>API Encryption File</title>
+</head>
+<body>
+
+  <h1>Przesyłanie pliku</h1>
+  <input type="file" id="fileInput">
+  <input type="text" id="key" placeholder="Enter key">
+  <button onclick="uploadFile()">Wyślij plik</button>
+
+  <hr>
+
+  <h1>Pobieranie pliku</h1>
+  <input type="text" id="fileCode" placeholder="Enter file code">
+  <button onclick="downloadFile()">Pobierz plik</button>
+
   <script>
     function uploadFile() {
       var fileInput = document.getElementById('fileInput');
@@ -23,12 +37,34 @@
 
       xhr.send(formData);
     }
+
+    function downloadFile() {
+      var fileCodeInput = document.getElementById('fileCode');
+      var fileCode = fileCodeInput.value;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'http://127.0.0.1:5000/download/' + fileCode, true); // Zastąp 'adres_serwera' odpowiednim adresem API
+      xhr.responseType = 'blob';
+      xhr.
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var response = xhr.response
+          var Filename = response.attachment_filename;
+          var downloadLink = document.createElement('a');
+          var blob = xhr.response;
+          var url = window.URL.createObjectURL(blob);
+          downloadLink.href = url;
+          downloadLink.download = 'downloaded_file';
+          downloadLink.click();
+          window.URL.revokeObjectURL(url);
+          console.log('Plik został pobrany.');
+        } else {
+          console.error('Wystąpił błąd podczas pobierania pliku.');
+        }
+      };
+
+      xhr.send();
+    }
   </script>
-</head>
-<body>
-  <h1>Przesyłanie pliku</h1>
-  <input type="file" id="fileInput">
-  <input type="text" id="key">
-  <button onclick="uploadFile()">Wyślij plik</button>
 </body>
 </html>
